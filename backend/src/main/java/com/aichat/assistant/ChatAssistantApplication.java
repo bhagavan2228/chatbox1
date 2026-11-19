@@ -12,6 +12,8 @@ import java.util.List;
 public class ChatAssistantApplication {
 
     public static void main(String[] args) {
+        System.setProperty("java.net.preferIPv4Stack", "true");
+        System.setProperty("java.net.preferIPv4Addresses", "true");
         loadDotEnvIfPresent();
         SpringApplication.run(ChatAssistantApplication.class, args);
     }
