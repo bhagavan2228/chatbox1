@@ -68,7 +68,7 @@ export default function ChatInput({ onSendMessage, isStreaming, onStopStream }) 
         </div>
       </div>
       <div className="chat-footer-hint">
-        Gemini 3.5 Flash Lite • Context maintained throughout conversation
+        Enter to send, Shift+Enter for new line • Powered by Gemini AI
       </div>
     </div>
   );

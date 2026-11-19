@@ -28,7 +28,8 @@ export default function ChatWindow({
   const starterPrompts = [
     { title: 'Explain a concept', prompt: 'Explain how Server-Sent Events work compared to WebSockets in 3 simple paragraphs.' },
     { title: 'Write code', prompt: 'Write a Java method to validate email addresses using regex and unit test it.' },
-    { title: 'Brainstorm ideas', prompt: 'Give me 5 creative ideas for a full-stack developer portfolio project.' },
+    { title: 'System Design', prompt: 'Design a real-time collaborative chat system with WebSockets and Redis pub/sub.' },
+    { title: 'AI Architecture', prompt: 'Compare fine-tuning vs RAG for building domain-specific enterprise AI assistants.' },
   ];
 
   return (
