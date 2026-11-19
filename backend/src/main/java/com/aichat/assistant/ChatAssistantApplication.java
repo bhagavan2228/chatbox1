@@ -38,6 +38,9 @@ public class ChatAssistantApplication {
                         if (System.getProperty(key) == null && System.getenv(key) == null) {
                             System.setProperty(key, val);
                         }
+                        if ("PORT".equalsIgnoreCase(key) && System.getProperty("server.port") == null) {
+                            System.setProperty("server.port", val);
+                        }
                     }
                 }
             } catch (Exception ignored) {
