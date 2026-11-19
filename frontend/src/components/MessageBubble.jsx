@@ -1,4 +1,7 @@
 import React from 'react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import CodeBlock from './CodeBlock';
 import { User, Bot, Clock } from 'lucide-react';
 
 export default function MessageBubble({ message, isStreaming = false }) {
@@ -33,10 +36,24 @@ export default function MessageBubble({ message, isStreaming = false }) {
         </div>
 
         <div className="message-content">
-          <div className="text-content" style={{ whiteSpace: 'pre-wrap' }}>
-            {message.content}
-            {isStreaming && <span className="streaming-cursor" />}
-          </div>
+          {isUser ? (
+            <div className="user-text-content">{message.content}</div>
+          ) : (
+            <div className="markdown-body">
+              <ReactMarkdown
+                remarkPlugins={[remarkGfm]}
+                components={{
+                  code: CodeBlock,
+                  a: ({ node, ...props }) => (
+                    <a {...props} target="_blank" rel="noopener noreferrer" />
+                  )
+                }}
+              >
+                {message.content}
+              </ReactMarkdown>
+              {isStreaming && <span className="streaming-cursor" />}
+            </div>
+          )}
         </div>
       </div>
     </div>
