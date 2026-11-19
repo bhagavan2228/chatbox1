@@ -17,6 +17,18 @@ export default function App() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [isLoadingList, setIsLoadingList] = useState(false);
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem('theme') || 'dark';
+  });
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
+  };
 
   const { isStreaming, startStream, stopStream } = useChatStream();
   const searchTimeoutRef = useRef(null);
@@ -205,6 +217,8 @@ export default function App() {
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
         isLoading={isLoadingList}
+        theme={theme}
+        onToggleTheme={toggleTheme}
       />
 
       <ChatWindow
@@ -217,6 +231,8 @@ export default function App() {
         onStopStream={stopStream}
         onToggleSidebar={() => setSidebarOpen((prev) => !prev)}
         sidebarOpen={sidebarOpen}
+        theme={theme}
+        onToggleTheme={toggleTheme}
       />
     </div>
   );

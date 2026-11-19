@@ -1,5 +1,5 @@
 import React from 'react';
-import { Plus, Trash2, MessageSquare, Search, Sparkles, X } from 'lucide-react';
+import { Plus, Trash2, MessageSquare, Search, Sparkles, X, Sun, Moon } from 'lucide-react';
 
 export default function Sidebar({
   conversations = [],
@@ -11,7 +11,9 @@ export default function Sidebar({
   onClose,
   searchQuery,
   onSearchChange,
-  isLoading = false
+  isLoading = false,
+  theme,
+  onToggleTheme
 }) {
   const formatTime = (isoString) => {
     if (!isoString) return '';
@@ -130,6 +132,16 @@ export default function Sidebar({
           <span className="status-dot"></span>
           <span>Gemini 3.5 Flash Lite</span>
         </div>
+        {onToggleTheme && (
+          <button
+            className="sidebar-theme-toggle"
+            onClick={onToggleTheme}
+            title={theme === 'dark' ? 'Switch to Light theme' : 'Switch to Dark theme'}
+            aria-label="Toggle theme"
+          >
+            {theme === 'dark' ? <Sun size={15} /> : <Moon size={15} />}
+          </button>
+        )}
       </div>
     </aside>
   );

@@ -2,7 +2,7 @@ import React, { useRef, useEffect } from 'react';
 import ToneToggle from './ToneToggle';
 import MessageBubble from './MessageBubble';
 import ChatInput from './ChatInput';
-import { Sparkles, MessageSquare } from 'lucide-react';
+import { Sparkles, MessageSquare, Sun, Moon } from 'lucide-react';
 
 export default function ChatWindow({
   conversation,
@@ -13,7 +13,9 @@ export default function ChatWindow({
   isStreaming,
   onStopStream,
   onToggleSidebar,
-  sidebarOpen
+  sidebarOpen,
+  theme,
+  onToggleTheme
 }) {
   const messagesEndRef = useRef(null);
 
@@ -53,6 +55,14 @@ export default function ChatWindow({
         </div>
 
         <div className="header-right">
+          <button
+            className="theme-toggle-btn"
+            onClick={onToggleTheme}
+            title={theme === 'dark' ? 'Switch to Light theme' : 'Switch to Dark theme'}
+            aria-label="Toggle theme"
+          >
+            {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+          </button>
           <ToneToggle
             selectedTone={selectedTone}
             onSelectTone={onSelectTone}
