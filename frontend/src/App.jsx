@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import Sidebar from './components/Sidebar';
 import ChatWindow from './components/ChatWindow';
 import { useChatStream } from './hooks/useChatStream';
@@ -19,8 +19,9 @@ export default function App() {
   const [isLoadingList, setIsLoadingList] = useState(false);
 
   const { isStreaming, startStream, stopStream } = useChatStream();
+  const searchTimeoutRef = useRef(null);
 
-  // Load conversations from backend
+  // Load conversations from backend (supports server-side search query)
   const loadConversations = useCallback(async (search = '', selectFirst = false) => {
     setIsLoadingList(true);
     try {
@@ -30,7 +31,7 @@ export default function App() {
       if (selectFirst && data.length > 0) {
         await loadConversationDetails(data[0].id);
       } else if (selectFirst && data.length === 0) {
-        // Create initial default conversation
+        // Create initial default conversation if none exist
         const newConv = await createConversation('New Chat', 'Professional');
         setConversations([newConv]);
         setCurrentConversation(newConv);
@@ -48,6 +49,23 @@ export default function App() {
   useEffect(() => {
     loadConversations('', true);
   }, [loadConversations]);
+
+  // Debounced server-side search when searchQuery changes
+  useEffect(() => {
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
+    }
+
+    searchTimeoutRef.current = setTimeout(() => {
+      loadConversations(searchQuery, false);
+    }, 300);
+
+    return () => {
+      if (searchTimeoutRef.current) {
+        clearTimeout(searchTimeoutRef.current);
+      }
+    };
+  }, [searchQuery, loadConversations]);
 
   // Load full messages for a specific conversation
   const loadConversationDetails = async (id) => {
@@ -142,8 +160,16 @@ export default function App() {
         });
       },
       onComplete: () => {
-        // Refresh conversations to get updated title & timestamp
-        loadConversations(searchQuery, false);
+        // Give backend title generation a moment and re-fetch thread list and current conversation
+        setTimeout(async () => {
+          await loadConversations(searchQuery, false);
+          if (convId) {
+            try {
+              const updatedConv = await getConversation(convId);
+              setCurrentConversation((prev) => prev?.id === convId ? updatedConv : prev);
+            } catch (_) {}
+          }
+        }, 800);
       },
       onError: (errorMsg) => {
         setMessages((prev) => {
