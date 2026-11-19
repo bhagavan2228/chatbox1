@@ -2,11 +2,17 @@ package com.aichat.assistant.controller;
 
 import com.aichat.assistant.dto.ConversationSummaryResponse;
 import com.aichat.assistant.dto.CreateConversationRequest;
+import com.aichat.assistant.dto.SendMessageRequest;
 import com.aichat.assistant.model.Conversation;
+import com.aichat.assistant.service.ChatStreamService;
 import com.aichat.assistant.service.ConversationService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.codec.ServerSentEvent;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
 
 import java.util.List;
 
@@ -15,9 +21,11 @@ import java.util.List;
 public class ConversationController {
 
     private final ConversationService conversationService;
+    private final ChatStreamService chatStreamService;
 
-    public ConversationController(ConversationService conversationService) {
+    public ConversationController(ConversationService conversationService, ChatStreamService chatStreamService) {
         this.conversationService = conversationService;
+        this.chatStreamService = chatStreamService;
     }
 
     @GetMapping
@@ -42,5 +50,12 @@ public class ConversationController {
     public ResponseEntity<Void> deleteConversation(@PathVariable String id) {
         conversationService.deleteConversation(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping(value = "/{id}/messages/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public Flux<ServerSentEvent<String>> streamMessage(
+            @PathVariable String id,
+            @Valid @RequestBody SendMessageRequest request) {
+        return chatStreamService.streamMessage(id, request);
     }
 }
