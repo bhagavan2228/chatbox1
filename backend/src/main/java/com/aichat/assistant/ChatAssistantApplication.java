@@ -41,6 +41,12 @@ public class ChatAssistantApplication {
                         if ("PORT".equalsIgnoreCase(key) && System.getProperty("server.port") == null) {
                             System.setProperty("server.port", val);
                         }
+                        if ("MONGODB_URI".equalsIgnoreCase(key) && System.getProperty("spring.data.mongodb.uri") == null) {
+                            System.setProperty("spring.data.mongodb.uri", val);
+                        }
+                        if ("GEMINI_API_KEY".equalsIgnoreCase(key) && System.getProperty("gemini.api.key") == null) {
+                            System.setProperty("gemini.api.key", val);
+                        }
                     }
                 }
             } catch (Exception ignored) {
