@@ -128,7 +128,7 @@ export default function Sidebar({
       <div className="sidebar-footer">
         <div className="model-badge">
           <span className="status-dot"></span>
-          <span>Gemini 2.5 Flash</span>
+          <span>Gemini 3.5 Flash Lite</span>
         </div>
       </div>
     </aside>
